@@ -1,4 +1,4 @@
-## ICLR workshop paper
+## ICLR Conference paper
 
 [starting document for notes](https://docs.google.com/document/d/1TJKPXxNHdMJTWXVuprB3feJcH4yyRidDwBJNyyBjdxA/edit?usp=sharing)
 
