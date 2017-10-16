@@ -3,6 +3,7 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{graphicx}
+\usepackage{natbib}
 
 
 \title{(tentative) Learning Neural Markers of Schizophrenia Disorder Using Recurrent Neural Networks}
@@ -66,35 +67,50 @@ Address \\
 ... Here we propose a new method based on recurrent-convolutional neural networks to automatically learn useful representations from short segments of fMRI recordings...
 \end{abstract}
 
+\section{Introduction}
+A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability that any robust diagnosis system should be robust to. A prominent cause of these variabilities are due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant.
+
+\section{Related Work}
+
+
+
 \section{Methods}
 
 \subsection{Dataset}
-One scane was captured every 2 seconds. Each session (??) consists of a single fMRI scanning session which lasted for almost 5 minutes (??). Data from each session was split to windows of 32 or 128 seconds which formed the samples used for training, evaluation, and test.  
+One scan was captured every 2 seconds. Each session (??) consists of a single fMRI scanning session which lasted for almost 5 minutes (??). Data from each session was split to windows of 32 or 128 seconds which formed the samples used for training, evaluation, and test.  
 
 \subsection{Recurrent-Convolutional Neural Networks}
-We used recurrent-convolutional nerual networks (R-CNN) to learn discriminative features for the problem of distinguishing normal and schizophrenic individuals. We tried several different architectures consisting of RNNs as well as R-CNNs. The input to the network is a 3-dimensional tensor (3D brain scans). We used 3-dimensional convolutions followed by max-pooling to extract position and scale independent features that would generalize across individuals. 
+We compared accuracy of recurrent neural networks (LSTM model) and recurrent-convolutional nerual networks (R-CNN) with baseline classifiers to learn discriminative features for the problem of distinguishing normal and schizophrenic individuals. We tried several different architectures consisting of LSTMs as well as R-CNNs. The input data was structured as a 3-dimensional tensor (3D brain scans). 
 
-Long Short-Term Memory (LSTM) network was used to model the temporal structure of data within each sample. LSTMs are known for their ability in learning long-term dependencies between inputs. 
-To implement the R-CNN, we constructed identical convolutional networks for each time frame with weights shared among all of them. Outputs of each CNN was then reshaped into a vector which was fed as input to the LSTM network at each time step. Figure-\ref{fig1} shows an overview of the recurrent-convolutional network used here. 
-We used Adam optimizer with default parameter values ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$). 
+\textbf{Baseline Classifier}: We used a $L_1$-regularized logistic regression model and Support Vector Classifier (SVC) applied on voxel activations as the baseline models to compare against. Both of these models were trained on voxel values on all time-frames (did we do this??). 
+
+\textbf{LSTM model}: All voxel values are reshaped into a vector and fed directly into a two-layer forward LSTM model. LSTMs are known for their ability in learning long-term dependencies between inputs. In this model the spatial relationship between voxels are ignored and LSTM learns the temporal relationship between activations in different voxels. 
+
+\textbf{Conv-LSTM model}: 3-D activations for each time frame were fed into a 3D CNN. We used 3-dimensional convolutions followed by max-pooling to extract position and scale independent features that would generalize across individuals. Identical networks were used to process each time-frame with shared weights between them. Outputs of each CNN were then reshaped into a vector that was fed as input to the LSTM network at each time step. Figure-\ref{fig1} shows an overview of the recurrent-convolutional network used here. CNN part learns 3-D features that are invariant to translation and scaling and reduces the dimension of the input space before feeding it into LSTM. 
+
+A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
+
+\subsection{Training Details}
+\label{training_details}
+We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$). We included dropout in the input and outputs of the LSTM cells \citep{Zaremba2014} which contained most of the tunable parameters in our models. 
+
 10-fold cross-validation was used to evaluate the performance for each proposed model. $l_2$ regularizer was used on all convolutional and fully connected weights. 
 3D-convolutions of size $3\times3\times3$ with stride 1 were used. Each block of convolutions were followed by a maxpool layer of size 2 and stride 2. Feature map size was dividing by 2 after each maxpool layer. Size of the input to the network was $(53\times64\times37)$.
 
 A different subset of subjects were assigned to the test set for each fold and data from the rest of the subjects were used for training and validation (without overlap between train and validation sets). For training, samples within each batch were generated by randomly selecting time windows from different subjects. All possible time windows of size $T$ from all subjects were used for training, validation and test. For each fold training was done for 10 folds. We used the validation set to for early stopping of training. After each training epoch, performance on the validation set was computed. Training was performed for 10 epochs and test performance was computed for the network state with highest validation score. 
 
-We used a batch size of 64 for all models. Larger convolutional models were trained using synchronous gradient descent on 16 GPUs. 
+
 
 \begin{figure}[t]
 \begin{center}
-\label{fig1}
 \includegraphics[width=3in]{figures/overview.png}
-%\framebox[4.0in]{$\;$}
 \end{center}
 \caption{Overview of the method used.}
+\label{fig1}
 \end{figure}
 
 \subsection{Data Preprocessing}
-
+Data preprocessing was done in three steps. (i) For each subject-run the average voxel activation was subtracted; (ii) each subject-run was 
 
 \subsubsection*{Acknowledgments}
 

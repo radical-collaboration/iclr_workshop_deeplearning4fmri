@@ -3,3 +3,6 @@
 *.aux
 *.gz
 *.pdf
+*.bbl
+*.blg
+*.dvi
