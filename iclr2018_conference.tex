@@ -88,6 +88,7 @@ We compared accuracy of recurrent neural networks (LSTM model) and recurrent-con
 
 \textbf{Conv-LSTM model}: 3-D activations for each time frame were fed into a 3D CNN. We used 3-dimensional convolutions followed by max-pooling to extract position and scale independent features that would generalize across individuals. Identical networks were used to process each time-frame with shared weights between them. Outputs of each CNN were then reshaped into a vector that was fed as input to the LSTM network at each time step. Figure-\ref{fig1} shows an overview of the recurrent-convolutional network used here. CNN part learns 3-D features that are invariant to translation and scaling and reduces the dimension of the input space before feeding it into LSTM. 
 
+
 A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
 
 \subsection{Training Details}
@@ -110,7 +111,7 @@ A different subset of subjects were assigned to the test set for each fold and d
 \end{figure}
 
 \subsection{Data Preprocessing}
-Data preprocessing was done in three steps. (i) For each subject-run the average voxel activation was subtracted; (ii) each subject-run was 
+Data preprocessing was done in three steps. (i) For each subject-run the average voxel activation was subtracted; (ii) data for each subject-run was standardized over all time frames and voxels; (iii) standardize each voxel over all time frames and subject-runs.
 
 \subsubsection*{Acknowledgments}
 
