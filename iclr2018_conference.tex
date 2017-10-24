@@ -112,8 +112,6 @@ We compared accuracy of recurrent neural networks (LSTM model) and recurrent-con
 
 A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
 
-XSEDE \citep{Towns2014}
-
 \subsection{Training Details}
 \label{training_details}
 We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$). We included dropout in the input and outputs of the LSTM cells \citep{Zaremba2014} which contained most of the tunable parameters in our models. 
@@ -142,18 +140,18 @@ Each fMRI sample (subject/run) was split into windows of 64 time points (or 128s
 
 We examined the performance of our models using two approaches. In the first approach, we compare the performance of LSTM and RCNN across various architectures and evaluate the model that yields the highest accuracy. In the second approach, we evaluated the robustness of our best models by training from the Auditory Oddball (AO) task and testing on a working memory task using the Sternberg Item Recognition Paradigm (SIRP). 
 
-experimental setup: We performed all experiments on the XSEDE Xstream GPU cluster-- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system. 
+experimental setup: We performed all experiments on the XSEDE Xstream GPU cluster \citep{Towns2014} -- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system. 
 
 
 \subsubsection*{LSTM and Recurrent Convolutional Neural Networks}
 
-First we evaluate LSTM and recurrent convolutional neural network models using the configurations in table 1. We trained the models with the non-working AO task dataset. Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set. 
+First we evaluate LSTM and recurrent convolutional neural network models using the configurations in table 1. We trained the models with the ??non-working AO task dataset. Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set. 
 
 The best recurrent convolutional model was obtained with architecture X containing two back-to-back convolutions in the first layer, one convolution in the second layer, and two back-to-back LSTMs in the third layer. We compared results using both 16 and 64 time-window samples while keeping the batch size fixed at 64 samples. For the model using 64 time windows, we noticed a significant improvement of 5\% in classification accuracy. 
 
-Comparing the performance of the baseline model and deep learning, the test scores of LSTM and RCNN were 17.5 \% better than linear SVM.  
+Comparing the performance of the baseline model and deep learning, the test scores of LSTM and RCNN were 17.5\% better than linear SVM.  
 
-In comparison to the best LSTM model, we noticed that LSTM scores slightly higher than RCNN. However, a closer examination reveals that RCNN exposed better training behavior across folds, with less fluctuation/variance in accuracy. In addition, most of the differences in accuracy can be attributed to the differences in subjects across sites. In particular, all folds from sites x,y,z achieve more than 66 \% accuracy while the remaining folds trained on data from site 6 showed little to no generalization or improvement over the baseline. 
+In comparison to the best LSTM model, we noticed that LSTM scores slightly higher than RCNN. However, a closer examination reveals that RCNN exposed better training behavior across folds, with less fluctuation/variance in accuracy. ??In addition, most of the differences in accuracy can be attributed to the differences in subjects across sites. ??In particular, all folds from sites x,y,z achieve more than 66 \% accuracy while the remaining folds trained on data from site 6 showed little to no generalization or improvement over the baseline. [weren't the subjects shuffled before fold separation? Aren't the folds balanced as much as possible in terms of sites?]
 
 \begin{figure}[t]
 \begin{center}
