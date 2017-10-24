@@ -112,6 +112,8 @@ We compared accuracy of recurrent neural networks (LSTM model) and recurrent-con
 
 A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
 
+XSEDE \citep{Towns2014}
+
 \subsection{Training Details}
 \label{training_details}
 We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$). We included dropout in the input and outputs of the LSTM cells \citep{Zaremba2014} which contained most of the tunable parameters in our models. 
@@ -131,14 +133,18 @@ A different subset of subjects were assigned to the test set for each fold and d
 \label{fig1}
 \end{figure}
 
-\subsection{Data Preprocessing}
-Data from each session was split to windows of 32 or 128 seconds which formed the samples used for training, evaluation, and test.  
-Data preprocessing was done in three steps. (i) For each subject-run the average voxel activation was subtracted; (ii) each subject-run was 
+\subsection{Data Preparation}
+Preprocessed fMRI data was normalized in three steps: For each subject/run/voxel (i) the BOLD signal time-series was demeaned; (ii) The resulting time-series was divided by standard deviation (SD) of activation across the whole brain (all voxels and times). Next, each voxel’s time-series was standardized respective to the mean and SD of the voxel’s activation across all subjects and runs.  
+
+Each fMRI sample (subject/run) was split into windows of 64 time points (or 128s) (a total of 137-63=74 samples), which formed the input for training, evaluation, and testing of our models. A shorter time-frame of 16 volumes (32s) was also tested. Subjects in the training, evaluation, and test sets were disjoint, i.e. all samples corresponding to a subject were only in one of the three above sets.  
+
 
 \subsubsection*{Acknowledgments}
 
 Data used for this study were downloaded from the Function BIRN Data Repository (http://fbirnbdr.birncommunity.org:8080/BDR/), supported by grants to the Function BIRN (U24-RR021992) Testbed funded by the National Center for Research Resources at the National Institutes of Health, U.S.A.	
 This work used the Extreme Science and Engineering Discovery Environment (XSEDE), which is supported by National Science Foundation grant number ACI-1548562, [and Compute Canada (www.computecanada.ca)??]. 
+[[Also: "This work used the Extreme Science and Engineering Discovery Environment (XSEDE) resource-name at the service-provider through allocation allocationid."]]
+
 Fundings: ? 
 
 
