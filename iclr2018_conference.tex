@@ -140,7 +140,7 @@ Each fMRI sample (subject/run) was split into windows of 64 time points (or 128s
 \subsection*{Results}
 
 We first investigated the effectiveness of LSTM and R-CNNs in capturing the temporal and spatial structure of the fMRI data in order to distinguish between the normal and schizophrenic patients. LSTM and R-CNN models both performed better than the baseline model. Our best LSTM model performed slightly better than our R-CNN model (~1\%). However the LSTM model experienced a large variance in performance across folds compared to R-CNN model (Table ?? and Figure ??). On the AO dataset, LSTM performance changed in the range of [42 - 85\%] (JD, please put the correct numbers in here???) which was much larger than the R-CNN model [55-75\%] (JD, and here???).
-We also explored the impact of length of the samples on the performance of the trained network (Figure ??). We found that larger time windows improved the accuracy in all tested models. 
+We also explored the impact of length of the samples on the performance of the trained network (Figure ??). We found that larger time windows improved the accuracy in all tested models.
 
 We then explored the generalization power of each model class across the two datasets recorded on the same subjects. The best model architectures found from the first step were evaluated on this task. Each model was trained on the AO dataset and tested on SIRP. Subject numbers were retained while splitting the data into multiple folds. Here we found that ... (JD, what did we find out???).
 
