@@ -144,6 +144,29 @@ We also explored the impact of length of the samples on the performance of the t
 
 We then explored the generalization power of each model class across the two datasets recorded on the same subjects. The best model architectures found from the first step were evaluated on this task. Each model was trained on the AO dataset and tested on SIRP. Subject numbers were retained while splitting the data into multiple folds. Here we found that ... (JD, what did we find out???).
 
+\begin{table}[]
+\centering
+\caption{Comparison of different model architectures and time-windows on the AO dataset.}
+\label{table_1}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Model}           & \multicolumn{2}{c|}{\textbf{LSTM}} & \textbf{RCNN (2, 1)} & \multicolumn{2}{c|}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
+\textbf{Window Size}      & 16   & 64   & 64    &16      & 64          & 64              \\ \hline
+\textbf{Test Performance} & -    & -    & -     & -      & -           & -      \\  \hline      
+\end{tabular}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Cross dataset results using our best models.}
+\label{table_2}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{}     & \textbf{AO} & \textbf{SIRP} & \textbf{AO$\rightarrow$SIRP} & \textbf{SIRP$\rightarrow$AO} & \textbf{AO+SIRP} \\ \hline
+\textbf{LSTM} & -           & -             & -                            & -                            & -                \\ \hline
+\textbf{RCNN} & -           & -             & -                            & -                            & -               \\ \hline
+\end{tabular}
+\end{table}
 
 
 %%%% Depending on how much material we are going to have for the results section we might not need subsections here. %%%
