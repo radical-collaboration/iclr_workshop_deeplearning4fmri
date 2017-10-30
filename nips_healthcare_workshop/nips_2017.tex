@@ -103,7 +103,7 @@ It includes functional and structural MRI data for patients with schizophrenia o
 %Why did we choose this dataset??
 The fMRI data included whole-brain scans taken every 2 seconds for a period of 280 seconds. Per subject, there were 4 experiment runs (280 sec each).
 A standard preprocessing pipeline was applied to each subject's raw fMRI data using the FSL software package \citep{Jenkinson2012}. The pipeline included motion correction, tCompCor denoising, spatial filtering, high-pass temporal filtering, and linear registration to the MNI T1 template through subject's T1 scan \citep[see][for a more detailed description of the preprocessing stages]{Gheiratmand2017}. The first 3 volumes in each run were deleted for signal instability, resulting in a total of 137 volumes. Finally, a universal mask, i.e. the intersection of all subjects' brains, was applied to each subject's data, resulting in a common non-zero brain area comprising 26,949 voxels (brain tissue of size $3.4374\times3.4375\times5$ mm).
-After preprocessing and quality control, N = 95 subjects (46 patients, 49 controls) remained in the study (from a total of 164 subjects in both scanning sessions). (We used the data from the second scanning session, out of two, for no particular reason.)
+After preprocessing and quality control, N = 95 subjects (46 patients, 49 controls) remained in the study (from a total of 164 subjects in both scanning sessions).
 
 \subsection{Models}
 
@@ -128,7 +128,7 @@ A batch size of 64 was used for all models. Larger convolutional models were tra
 %We performed all experiments on the XSEDE Xstream GPU cluster \citep{Towns2014} -- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system.
 
 
-\begin{figure}[t]
+\begin{figure}[h]
 \begin{center}
 \includegraphics[width=2.5in]{figures/overview.png}
 \end{center}
