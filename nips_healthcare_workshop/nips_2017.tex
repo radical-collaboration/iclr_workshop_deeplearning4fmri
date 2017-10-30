@@ -104,7 +104,7 @@ After preprocessing and quality control, N = 95 subjects (46 patients, 49 contro
 
 We compared accuracy of recurrent neural networks (LSTM model) and recurrent-convolutional neural networks (R-CNN) with baseline classifiers to learn discriminative features for the problem of distinguishing normal and schizophrenic individuals. We tried several different architectures consisting of LSTMs as well as R-CNNs. The input data was structured as a 3-dimensional tensor (3D brain scans). 
 
-\textbf{Baseline Classifier}: We compared our proposed models with the results from a linear support vector machine which we call the baseline method. In order to make the SVM solution feasible, we reduced the size of the input by a rate of $4\times4\times3$ voxels.
+\textbf{Baseline Classifier}: We compared our proposed models with the results from a linear support vector machine which we call the baseline method. In order to make the SVM solution feasible, we reduced the size of the input by a rate of $4\times4\times3$ voxels. This resulted in a feature vector of size 77,953 (137 time points x 569 "supervoxels") per run per subject, for a total of 380 samples (95 subjects x 4 runs.).  
 
 \textbf{LSTM model}: All voxel values are reshaped into a vector and fed directly into a two-layer forward LSTM model. LSTMs are known for their ability in learning long-term dependencies between inputs. In this model the spatial relationship between voxels are ignored and LSTM learns the temporal relationship between activations in different voxels. 
 
