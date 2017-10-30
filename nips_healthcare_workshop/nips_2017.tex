@@ -64,7 +64,7 @@
 
 \begin{abstract}
 
-... Here we propose a new method based on recurrent-convolutional neural networks to automatically learn useful representations from short segments of fMRI recordings...
+A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability that any robust diagnosis system should consider. A prominent cause of these variabilities are due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant. Here we propose a new method based on recurrent-convolutional neural networks to automatically learn useful representations from short segments of fMRI recordings. We applied several neural network architectures to learn invariant markers for schizophrenia disorder from a large-scale fMRI dataset. While both of these methods achieved remarkable accuracy in distinguishing between schizophrenic and control subjects, they fell short of reaching the same level as hand designed connectivity features. 
 
 \end{abstract}
 
@@ -146,13 +146,15 @@ We investigated the effectiveness of LSTM and R-CNNs in capturing the temporal a
 \centering
 \caption{Comparison of different model architectures and time-windows on the AO dataset.}
 \label{table_1}
-\begin{tabular}{|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{Model}           & \multicolumn{2}{c|}{\textbf{LSTM}} & \textbf{RCNN (2, 1)} & \multicolumn{2}{c|}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
-\textbf{Window Size}      & 16   & 64   & 64    &16    & 64    & 64           \\ \hline
-\textbf{Test Performance} & 63   & 64   & 64    & 61      & -           & 63      \\  \hline      
+\textbf{Model}           & \multicolumn{2}{c|}{\textbf{LSTM}} & 
+\multicolumn{2}{c|}{\textbf{RCNN (2, 1)}} & \multicolumn{2}{c|}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
+\textbf{Window Size}      & 16   & 64  & 16  & 64    &16    & \ 64    & 64           \\ \hline
+\textbf{Test Performance} & 60.2 \%   & 66.4\%   & 63.1\% & 64.9\% & 60.9\%  & 61.4\%  & 63.3\%  \\  \hline      
 \end{tabular}
 \end{table}
+
 
 
 We evaluate LSTM and recurrent convolutional neural network models using the configurations in table 1. We trained the models with the non-working AO task dataset. Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set.
