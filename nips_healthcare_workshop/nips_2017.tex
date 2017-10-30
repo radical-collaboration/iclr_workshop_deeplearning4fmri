@@ -93,6 +93,7 @@ We used fMRI data in response to an auditory oddball task from patients diagnose
 \section{Methods}
 
 \subsection{Dataset}
+
 We used FBIRN phaseII fMRI dataset \citep{Keator2016}.
 %, downloaded from Function BIRN Data Repository, Project Accession Number 2007-BDR-6UHZ1 (fbirnbdr.nbirn.net:8080/BDR). 
 It includes functional and structural MRI data for patients with schizophrenia or schizoaffective disorder and age- and sex-matched healthy controls. We focused on the subset of fMRI data acquired in response to an Auditory Oddball (AO) task. 
@@ -141,7 +142,20 @@ Each fMRI sample (subject/run) was split into windows of 64 time points (or 128s
 \section*{Results}
 
 We investigated the effectiveness of LSTM and R-CNNs in capturing the temporal and spatial structure of the fMRI data in order to distinguish between normal and schizophrenic patients. The average accuracy of the baseline method was 57.89\%. 
-Both LSTM and R-CNN models performed better than the baseline model (Table \ref{table_1}). Our best LSTM model performed slightly better than our R-CNN model (~1\%). Additionally, we explored the impact of length of the samples on the performance of the trained network . We found that larger time windows improved the accuracy in all tested models. For the R-CNN models we experimented with the number of convolutional layers and found that the deeper CNN models did not reduce the error (and slightly increased it). 
+Both LSTM and R-CNN models performed better than the baseline model (Table \ref{table_1}). Our best LSTM model performed slightly better than our R-CNN model ($ \sim 1\%$). Additionally, we explored the impact of length of the samples on the performance of the trained network . We found that larger time windows improved the accuracy in all tested models. For the R-CNN models we experimented with the number of convolutional layers and found that the deeper CNN models did not reduce the error (and slightly increased it). 
+
+% \begin{table}[h]
+% \centering
+% \caption{Comparison of different model architectures and time-windows on the AO dataset.}
+% \label{table_1}
+% \begin{tabular}{|c|c|c|c|c|c|c|c|}
+% \hline
+% \textbf{Model}           & \multicolumn{2}{c|}{\textbf{LSTM}} &
+% \multicolumn{2}{c|}{\textbf{RCNN (2, 1)}} & \multicolumn{2}{c|}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
+% \textbf{Window Size}      & 16   & 64  & 16  & 64    &16    & \ 64    & 64           \\ \hline
+% \textbf{Test Performance} & 60.2 \%   & 66.4\%   & 63.1\% & 64.9\% & 60.9\%  & 61.4\%  & 63.3\%  \\  \hline
+% \end{tabular}
+% \end{table}
 
 \begin{table}[h]
 \centering
@@ -149,20 +163,18 @@ Both LSTM and R-CNN models performed better than the baseline model (Table \ref{
 \label{table_1}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{Model}           & \multicolumn{2}{c|}{\textbf{LSTM}} &
-\multicolumn{2}{c|}{\textbf{RCNN (2, 1)}} & \multicolumn{2}{c|}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
+\textbf{Model}           & \multicolumn{2}{c}{\textbf{LSTM}} &
+\multicolumn{2}{c}{\textbf{RCNN (2, 1)}} & \multicolumn{2}{c}{\textbf{RCNN (1, 2)}} & \textbf{RCNN (2, 2, 1)} \\ \hline
 \textbf{Window Size}      & 16   & 64  & 16  & 64    &16    & \ 64    & 64           \\ \hline
 \textbf{Test Performance} & 60.2 \%   & 66.4\%   & 63.1\% & 64.9\% & 60.9\%  & 61.4\%  & 63.3\%  \\  \hline
 \end{tabular}
 \end{table}
-
 
 % Do we have this table??
 %Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set.
 
 The best recurrent convolutional model was obtained with architecture X containing two back-to-back convolutions in the first layer, one convolution in the second layer, and two back-to-back LSTMs in the third layer. We compared results using both 16 and 64 time-window samples while keeping the batch size fixed at 64 samples. For the model using 64 time windows, we noticed a significant improvement of 6\% in classification accuracy.
 Comparing the performance of the baseline model and deep learning, the test scores of LSTM and R-CNN were $\sim$ 8\% better than linear SVM.
-
 
 \section{Discussion}
 %A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability that any reliable diagnosis system should be robust to. A prominent source of these variabilities is due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant. We applied several neural network architectures to learn invariant markers for schizophrenia disorder from a large-scale fMRI dataset. While both of these methods achieved remarkable accuracy in distinguishing between schizophrenic and control subjects, they fell short of reaching the same level as hand-designed connectivity features \citep{Gheiratmand2017}. The 2-layer LSTM architecture which was used in all our models helped to learn the temporal dependencies in long time windows. The R-CNN model learned better representations when using short time windows ($T=16$) but failed to match the LSTM performance when using the longer time windows ($T=64$). 
