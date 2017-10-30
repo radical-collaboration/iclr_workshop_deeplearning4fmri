@@ -91,42 +91,40 @@ Here, our goal was to exploit both spatial and temporal information in the fMRI 
 \section{Methods}
 
 \subsection{Dataset}
-
-We used FBIRN phaseII fMRI dataset \citep{Keator2016}, downloaded from Function BIRN Data Repository, Project Accession Number 2007-BDR-6UHZ1 (fbirnbdr.nbirn.net:8080/BDR). It includes funcationl and structural MRI data for patients with schizophrenia or schizoaffective disorder and age- and sex-matched healthy controls. We focused on the subset of fMRI data acquired in response to an Auditory Oddball (AO) task. The fMRI data included whole-brain scans taken every 2 seconds for a period of 280 seconds. Per subject, there were 4 experiment runs (280 sec each) for the AO task.
-
-A standard series of preprocessing stages was applied to each subject's raw fMRI data using the FSL software package \citep{Jenkinson2012}. These included motion correction, tCompCor denoising, spatial filtering, high-pass temporal filtering, and linear registration to the MNI T1 template through subject's T1 scan (\citep[see][for a more detailed description of the preprocessing stages]{Anonymous2017}. The first 3 volumes in each run were deleted for signal instability, resulting in a total of 137 volumes. Finally, a universal mask, i.e. the intersection of all subjects' brains, was applied to each subject's data, resulting in a common non-zero brain area comprising 26,949 voxels (brain tissue of size 3.4374 x 3.4375 x 5 mm).
-
+We used FBIRN phaseII fMRI dataset \citep{Keator2016}.
+%, downloaded from Function BIRN Data Repository, Project Accession Number 2007-BDR-6UHZ1 (fbirnbdr.nbirn.net:8080/BDR). 
+It includes functional and structural MRI data for patients with schizophrenia or schizoaffective disorder and age- and sex-matched healthy controls. We focused on the subset of fMRI data acquired in response to an Auditory Oddball (AO) task. 
+%Why did we choose this dataset??
+The fMRI data included whole-brain scans taken every 2 seconds for a period of 280 seconds. Per subject, there were 4 experiment runs (280 sec each) for the AO task.
+A standard series of preprocessing stages was applied to each subject's raw fMRI data using the FSL software package \citep{Jenkinson2012}. These included motion correction, tCompCor denoising, spatial filtering, high-pass temporal filtering, and linear registration to the MNI T1 template through subject's T1 scan \citep[see][for a more detailed description of the preprocessing stages]{Gheiratmand2017}. The first 3 volumes in each run were deleted for signal instability, resulting in a total of 137 volumes. Finally, a universal mask, i.e. the intersection of all subjects' brains, was applied to each subject's data, resulting in a common non-zero brain area comprising 26,949 voxels (brain tissue of size 3.4374 x 3.4375 x 5 mm).
 After preprocessing and quality control, N = 95 subjects (46 patients, 49 controls) remained in the study (from a total of 164 subjects in both scanning sessions). (We used the data from the second scanning session, out of two, for no particular reason.)
 
 \subsection{Recurrent-Convolutional Neural Networks}
 
-We compared accuracy of recurrent neural networks (LSTM model) and recurrent-convolutional nerual networks (R-CNN) with baseline classifiers to learn discriminative features for the problem of distinguishing normal and schizophrenic individuals. We tried several different architectures consisting of LSTMs as well as R-CNNs. The input data was structured as a 3-dimensional tensor (3D brain scans). 
+We compared accuracy of recurrent neural networks (LSTM model) and recurrent-convolutional neural networks (R-CNN) with baseline classifiers to learn discriminative features for the problem of distinguishing normal and schizophrenic individuals. We tried several different architectures consisting of LSTMs as well as R-CNNs. The input data was structured as a 3-dimensional tensor (3D brain scans). 
 
-\textbf{Baseline Classifier}: We used a $L_1$-regularized logistic regression model and Support Vector Classifier (SVC) applied on voxel activations as the baseline models to compare against. Both of these models were trained on voxel values on all time-frames (did we do this??). 
+\textbf{Baseline Classifier}: We compared our proposed models with the results from a linear support vector machine which we call the baseline method. In order to make the SVM solution feasible, we reduced the size of the input by a rate of $4\times4\times3$ voxels.
 
 \textbf{LSTM model}: All voxel values are reshaped into a vector and fed directly into a two-layer forward LSTM model. LSTMs are known for their ability in learning long-term dependencies between inputs. In this model the spatial relationship between voxels are ignored and LSTM learns the temporal relationship between activations in different voxels. 
 
-\textbf{Conv-LSTM model}: 3-D activations for each time frame were fed into a 3D CNN. We used 3-dimensional convolutions followed by max-pooling to extract position and scale independent features that would generalize across individuals. Identical networks were used to process each time-frame with shared weights between them. Outputs of each CNN were then reshaped into a vector that was fed as input to the LSTM network at each time step. Figure-\ref{fig1} shows an overview of the recurrent-convolutional network used here. CNN part learns 3-D features that are invariant to translation and scaling and reduces the dimension of the input space before feeding it into LSTM. 
-
-A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
+\textbf{Conv-LSTM model}: 3-D activations for each time frame were fed into a 3D CNN. We used 3-dimensional convolutions followed by max-pooling to extract position and scale independent features that would generalize across individuals. Identical networks were used to process each time-frame with shared weights between them. Outputs of each CNN were then reshaped into a vector that was fed as input to the LSTM network at each time step. Figure-\ref{fig1} shows an overview of the recurrent-convolutional network used here. CNN part learns 3-D features that are invariant to translation and scaling and reduces the dimension of the input space before feeding it into LSTM. ?? filters were used in convolutions in each layer. 
 
 \subsection{Training Details}
 \label{training_details}
 
 We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$). We included dropout in the input and outputs of the LSTM cells \citep{Zaremba2014} which contained most of the tunable parameters in our models. 
-
 10-fold cross-validation was used to evaluate the performance for each proposed model. $l_2$ regularizer was used on all convolutional and fully connected weights. 
-3D-convolutions of size $3\times3\times3$ with stride 1 were used. Each block of convolutions were followed by a maxpool layer of size 2 and stride 2. Feature map size was dividing by 2 after each maxpool layer. Size of the input to the network was $(53\times64\times37)$.
-
+3D-convolutions of size $3\times3\times3$ with stride 1 were used. Each block of convolutions were followed by a maxpool layer of size 2 and stride 2. Feature map size was dividing by 2 after each maxpool layer. Size of the input to the network was $(53\times64\times37)$. 
+A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases we experimented with varying number of time-frames included in each sample (i.e. 16 and 64).
 A different subset of subjects were assigned to the test set for each fold and data from the rest of the subjects were used for training and validation (without overlap between train and validation sets). For training, samples within each batch were generated by randomly selecting time windows from different subjects. All possible time windows of size $T$ from all subjects were used for training, validation and test. For each fold training was done for 10 folds. We used the validation set to for early stopping of training. After each training epoch, performance on the validation set was computed. Training was performed for 10 epochs and test performance was computed for the network state with highest validation score. 
-experimental setup: We performed all experiments on the XSEDE Xstream GPU cluster \citep{Towns2014} -- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system.
+experimental setup: 
 
+%We performed all experiments on the XSEDE Xstream GPU cluster \citep{Towns2014} -- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system.
 
-** add figure on validation loss for RCNN
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=3in]{figures/overview.png}
+\includegraphics[width=2.5in]{figures/overview.png}
 \end{center}
 \caption{Overview of the method used.}
 \label{fig1}
@@ -140,9 +138,10 @@ Each fMRI sample (subject/run) was split into windows of 64 time points (or 128s
 
 \section*{Results}
 
-We investigated the effectiveness of LSTM and R-CNNs in capturing the temporal and spatial structure of the fMRI data in order to distinguish between normal and schizophrenic patients. LSTM and R-CNN models both performed better than the baseline model. Our best LSTM model performed slightly better than our R-CNN model (~1\%). Additionally, we explored the impact of length of the samples on the performance of the trained network (Figure ??). We found that larger time windows improved the accuracy in all tested models. For the R-CNN models we experimented with different architectures, in order to determine whether more convolutions would produce better generalization and thereby improve overall accuracy. 
+We investigated the effectiveness of LSTM and R-CNNs in capturing the temporal and spatial structure of the fMRI data in order to distinguish between normal and schizophrenic patients. The average accuracy of the baseline method was 57.89\%. 
+Both LSTM and R-CNN models performed better than the baseline model (Table \ref{table_1}). Our best LSTM model performed slightly better than our R-CNN model (~1\%). Additionally, we explored the impact of length of the samples on the performance of the trained network . We found that larger time windows improved the accuracy in all tested models. For the R-CNN models we experimented with the number of convolutional layers and found that the deeper CNN models did not reduce the error (and slightly increased it). 
 
-\begin{table}[]
+\begin{table}[h]
 \centering
 \caption{Comparison of different model architectures and time-windows on the AO dataset.}
 \label{table_1}
@@ -156,30 +155,21 @@ We investigated the effectiveness of LSTM and R-CNNs in capturing the temporal a
 \end{table}
 
 
-We evaluate LSTM and recurrent convolutional neural network models using the configurations in table 1. We trained the models with the non-working AO task dataset. Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set.
+% Do we have this table??
+%Table 2 shows the number of parameters used by each type of architecture, and the corresponding error achieved on the test set.
 
-The best recurrent convolutional model was obtained with architecture X containing two back-to-back convolutions in the first layer, one convolution in the second layer, and two back-to-back LSTMs in the third layer. We compared results using both 16 and 64 time-window samples while keeping the batch size fixed at 64 samples. For the model using 64 time windows, we noticed a significant improvement of 5\% in classification accuracy.
+The best recurrent convolutional model was obtained with architecture X containing two back-to-back convolutions in the first layer, one convolution in the second layer, and two back-to-back LSTMs in the third layer. We compared results using both 16 and 64 time-window samples while keeping the batch size fixed at 64 samples. For the model using 64 time windows, we noticed a significant improvement of 6\% in classification accuracy.
+Comparing the performance of the baseline model and deep learning, the test scores of LSTM and R-CNN were $\sim$ 8\% better than linear SVM.
 
-Comparing the performance of the baseline model and deep learning, the test scores of LSTM and RCNN were 17.5\% better than linear SVM.
-
-
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width=3in]{figures/overview.png}
-\end{center}
-\caption{Overview of the method used.}
-\label{fig1}
-\end{figure}
 
 \section{Discussion}
-
-A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability that any robust diagnosis system should be robust to. A prominent cause of these variabilities are due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant. We applied several neural network architectures to learn invariant markers for schizophrenia disorder from a large-scale fMRI dataset. While both of these methods achieved remarkable accuracy in distinguishing between schizophrenic and control subjects, they fell short of reaching the same level as hand designed connectivity features \citep{Gheiratmand2017}. The 2-layer LSTM architecture which was used in all our models helped to learn the temporal dependencies in long time windows. The RCNN model learned better representations when using short time windows ($T=16$).
+A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability that any reliable diagnosis system should be robust to. A prominent source of these variabilities is due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant. We applied several neural network architectures to learn invariant markers for schizophrenia disorder from a large-scale fMRI dataset. While both of these methods achieved remarkable accuracy in distinguishing between schizophrenic and control subjects, they fell short of reaching the same level as hand designed connectivity features \citep{Gheiratmand2017}. The 2-layer LSTM architecture which was used in all our models helped to learn the temporal dependencies in long time windows. The R-CNN model learned better representations when using short time windows ($T=16$) but failed to match the LSTM performance when using the longer time windows ($T=64$). 
 %The 3-D convolutions formed more stable features compared to the LSTM model which was evident in significantly smaller variance in performance.
 
 
-\subsubsection*{Acknowledgments}
+%\subsubsection*{Acknowledgments}
 
-Data used for this study were downloaded from the Function BIRN Data Repository (http://fbirnbdr.birncommunity.org:8080/BDR/), supported by grants to the Function BIRN (U24-RR021992) Testbed funded by the National Center for Research Resources at the National Institutes of Health, U.S.A. This work used the Extreme Science and Engineering Discovery Environment (XSEDE) XStream at through allocation TG-MCB090174. We acknowledge funding support from the Graduate Assistance in Areas of National Need (GAANN) fellowship and the NSF Award 1443054 (SPIDAL). 
+%Data used for this study were downloaded from the Function BIRN Data Repository (http://fbirnbdr.birncommunity.org:8080/BDR/), supported by grants to the Function BIRN (U24-RR021992) Testbed funded by the National Center for Research Resources at the National Institutes of Health, U.S.A. This work used the Extreme Science and Engineering Discovery Environment (XSEDE) XStream at through allocation TG-MCB090174. We acknowledge funding support from the Graduate Assistance in Areas of National Need (GAANN) fellowship and the NSF Award 1443054 (SPIDAL). 
 
 \bibliography{nips_2017}
 \bibliographystyle{nips_2017_refs}
