@@ -7,14 +7,14 @@
 % to avoid loading the natbib package, add option nonatbib:
 % \usepackage[nonatbib]{nips_2017}
 
-\usepackage[nonatbib]{nips_2017}
+%\usepackage[nonatbib]{nips_2017}
 \usepackage[numbers]{natbib}
 %\usepackage[backend=bibtex,style=ieee-alphabetic,natbib=true]{biblatex}
 %\addbibresource{IEEEfull.bib}
 %\addbibresource{IEEEexample.bib}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
-% \usepackage[final]{nips_2017}
+\usepackage[final]{nips_2017}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -31,34 +31,36 @@
 % what about this (or else ..): Schizophrenia Identification from 4-D fMRI data Using Recurrent Neural Networks
 
 \author{
-  David S.~Hippocampus\thanks{Use footnote for providing further
-    information about author (webpage, alternative
-    address)---\emph{not} for acknowledging funding agencies.} \\
-  Department of Computer Science\\
-  Cranberry-Lemon University\\
-  Pittsburgh, PA 15213 \\
-  \texttt{hippo@cs.cranberry-lemon.edu} \\
-  %% examples of more authors
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \AND
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
+Jumana Dakka\\
+Electrical \& Computer Engineering\\
+Rutgers University\\
+\texttt{jumana.dakka@rutgers.edu} \\
+%% examples of more authors
+\And
+Pouya Bashivan\\
+Brain and Cognitive Sciences\\
+Massachusetts Institute of Technology\\
+%% Address \\
+\texttt{bashivan@mit.edu} \\
+\And
+Mina Gheiratmand\\
+Computing Science\\
+University of Alberta\\
+\texttt{mgheirat@ualberta.ca}\\
+\And
+Irina Rish\\
+IBM T.J. Watson Research Center\\
+\texttt{rish@us.ibm.com}\\
+\And
+Shantenu Jha\\
+Electrical \& Computer Engineering\\
+Rutgers University\\
+\texttt{shantenu.jha@rutgers.edu}\\
+\And
+Russell Greiner\\
+Computing Science\\
+University of Alberta\\
+\texttt{rgreiner@ualberta.ca}\\
 }
 
 \begin{document}
@@ -69,6 +71,7 @@
 \begin{abstract}
 
 %A key challenge in dealing with neuroimaging data comes from the inter- and intra-subject variability. A prominent cause of these variabilities are due to small differences in the functional cortical mapping between individuals which calls for neural markers that are position and scale invariant. Most previous machine learning studies examine these markers using hand-designed features, which collapses the time dimension into a single number. Yet such approach does not adhere to the spatial location of these markers. Here we propose a new method based on recurrent-convolutional neural networks to automatically learn useful representations from short segments of fMRI recordings. Our goal is to exploit both spatial and temporal information in the fMRI movie (at the whole-brain voxel level) for identifying patients with schizophrenia.
+** Initial Draft ** \\
 Smart systems that can accurately diagnose patients with mental disorders and identify effective treatments based on brain functional imaging data are of great applicability and are gaining much attention. Most previous machine learning studies use hand-designed features, such as functional connectivity, which does not maintain the potential useful information in the spatial relationship between brain regions and the temporal profile of the signal in each region. Here we propose a new method based on recurrent-convolutional neural networks to automatically learn useful representations from segments of 4-D fMRI recordings. Our goal is to exploit both spatial and temporal information in the functional MRI \textit{movie} (at the whole-brain voxel level) for identifying patients with schizophrenia. % Please complete with sth on the findings. Please feel free to revise.
 
 \end{abstract}
@@ -119,10 +122,10 @@ The R-CNN (2,1) contains two back-to-back convolutional layers with 16 filters i
 \subsection{Training Details}
 \label{training_details}
 
-We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$) \citep{Kingma2014}. We included dropout in the input and outputs of the LSTM cells \citep{Zaremba2014}, which contained most of the tunable parameters in our models. In addition, we applied $l_2$ regularization with $\lambda=10^{-4}$ to all convolutional and fully connected weights.
+We used Adam optimizer with default parameter settings ($\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}$) \citep{Kingma2014} and learning rate of 0.0001. We included 50 \% dropout in the input and outputs of the LSTM cells \citep{Zaremba2014}, which contained most of the tunable parameters in our models. In addition, we applied $l_2$ regularization with $\lambda=10^{-4}$ to all convolutional and fully connected weights.
 3-D-convolutions of size $3\times3\times3$ with stride 1 were used. Each block of convolutions were followed by a maxpool layer of size 2 and stride 2. Size of the input to the network was $(53\times64\times37)$ voxels. 
 A batch size of 64 was used for all models. Larger convolutional models were trained synchronously on 16 GPUs. In both cases, we experimented with varying number of time-frames included in each sample - viz., 16 and 64.
-We used 10-fold cross-validation to evaluate the performance for each proposed model. Subjects in the training, evaluation, and test sets were disjoint, i.e. all samples corresponding to a subject were used only in one of the three sets. For training, samples within each batch were generated by randomly selecting time windows from different subjects. All possible time windows of size $T$ from all subjects were used for training, validation and test. For each fold, training was done for 10 folds. We used the validation set for early stopping of training. After each training epoch, performance on the validation set was computed. Training was performed for 10 epochs and test performance was computed for the network state with highest validation score.
+We used 10-fold cross-validation to evaluate the performance for each proposed model, where each fold was independently trained using different samples. Subjects in the training, evaluation, and test sets were disjoint, i.e. all samples corresponding to a subject were used only in one of the three sets. For training, samples within each batch were generated by randomly selecting time windows from different subjects. All possible time windows of size $T$ from all subjects were used for training, validation and test. We used the validation set for early stopping of training. After each training epoch, performance on the validation set was computed. Training was performed for 10 epochs and test performance was computed for the network state with highest validation score.
 %experimental setup: 
 
 %We performed all experiments on the XSEDE Xstream GPU cluster \citep{Towns2014} -- a petaFLOP Cray machine with 8 NVIDIA K80 card, 2 Intel Ivy-Bridge 10-core CPUs, and 256 GB of DRAM per node, with shared Lustre file system.
