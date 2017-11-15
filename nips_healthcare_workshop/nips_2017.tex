@@ -106,7 +106,9 @@ We used the FBIRN phase-II fMRI dataset \citep{Keator2016}
 %Why did we choose this dataset??
 The fMRI data included whole-brain scans taken every 2 seconds for a period of 280 seconds. Per subject, there were 4 experiment runs (280 sec each).
 A standard preprocessing pipeline was applied to each subject's raw fMRI data using the FSL software package \citep{Jenkinson2012}. The pipeline included motion correction, tCompCor denoising, spatial filtering, high-pass temporal filtering, and linear registration to the MNI T1 template through subject's T1 scan \citep[see][for a more detailed description of the preprocessing stages]{Gheiratmand2017}. The first 3 volumes in each run were deleted for signal instability, resulting in a total of 137 volumes. Finally, a universal mask, i.e. the intersection of all subjects' brains, was applied to each subject's data, resulting in a common non-zero brain area of 26,949 voxels (brain tissue of size $3.4374\times3.4375\times5$ mm).
-After preprocessing and quality control, N = 95 subjects (46 patients, 49 controls) remained in the study (from a total of 164 subjects in both scanning sessions).(Subjects with missing imaging data, runs less than 4, or excessive motion were excluded citep\[see][for details of quality control]{Gheiratmand2017}.)
+After preprocessing and quality control, N = 95 subjects (46 patients, 49 controls) remained in the study (from a total of 164 subjects in both scanning sessions).(Subjects with missing imaging data, runs less than 4, or excessive motion were excluded citep
+
+%\[see][for details of quality control]{Gheiratmand2017}.)
 
 \subsection{Models}
 
